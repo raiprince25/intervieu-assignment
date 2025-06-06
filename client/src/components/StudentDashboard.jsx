@@ -13,8 +13,6 @@ const StudentDashboard = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [kicked, setKicked] = useState(false);
   const navigate = useNavigate();
-
-  // Check localStorage for existing name
   useEffect(() => {
     const savedName = localStorage.getItem('studentName');
     if (savedName) {
@@ -25,7 +23,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     if (!name) return;
 
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io('https://new-backend-1-kyhx.onrender.com', { transports: ['websocket'] });
     setSocket(newSocket);
 
     newSocket.emit('student-join', name);

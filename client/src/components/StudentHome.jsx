@@ -12,7 +12,7 @@ const StudentHome = () => {
 const checkActivePoll = async () => {
   try {
     const currentTimestamp = Date.now();
-    const response = await fetch(`http://localhost:5000/api/questions/active?timestamp=${currentTimestamp}`);
+    const response = await fetch(`https://new-backend-1-kyhx.onrender.com/api/questions/active?timestamp=${currentTimestamp}`);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -38,7 +38,7 @@ const handleContinue = async () => {
   try {
     const hasActivePoll = await checkActivePoll();
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://new-backend-1-kyhx.onrender.com', { transports: ['websocket'] });
     socket.emit('student-join', name);
 
     socket.on('student-connected', ({ studentId }) => {

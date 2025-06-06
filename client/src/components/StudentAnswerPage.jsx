@@ -8,17 +8,17 @@ const StudentAnswerPage = () => {
   const [results, setResults] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null); // Track current user
+  const [currentUser, setCurrentUser] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('username')); 
+    const user = localStorage.getItem('userName'); 
     setCurrentUser(user);
 
     const fetchActiveQuestion = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/results');
+        const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/results');
         const data = await response.json();
 
         if (!data.question) {
@@ -50,14 +50,13 @@ const StudentAnswerPage = () => {
 
     const interval = setInterval(async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/results');
+        const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/results');
         const data = await response.json();
         
         if (data.options) setResults(data.options);
         
         if (data.participants) {
           setParticipants(data.participants);
-          // Check if current user is still in participants on each poll
           checkKickedStatus(currentUser, data.participants);
         }
       } catch (err) {
@@ -71,9 +70,10 @@ const StudentAnswerPage = () => {
   const checkKickedStatus = (user, participantsList) => {
     if (!user || !participantsList) return;
     
-    const isKicked = !participantsList.includes(user); // Adjust based on your user identifier
+    const isKicked = !participantsList.includes(user);
     
-    if (isKicked) {
+    
+    if (isKicked ) {
       navigate('/student/kickout');
     }
   };
@@ -94,7 +94,7 @@ const StudentAnswerPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-white font-sans relative px-4 py-8">
       {/* Floating Chat Button */}
       <div
-        className="fixed right-16 bottom-12 bg-[#6766D5] p-3 rounded-full shadow-lg cursor-pointer hover:bg-[#5a59c7] transition-colors"
+        className="fixed right-16 bottom-12 bg-[#6766D5] rounded-full shadow-lg cursor-pointer hover:bg-[#5a59c7] transition-colors"
         onClick={toggleChat}
       >
         <img src={ChatIcon} alt="Chat" className="w-[80px] h-[76px]" />

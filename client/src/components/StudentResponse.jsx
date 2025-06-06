@@ -1,4 +1,4 @@
-// StudentResponse.js
+
 import React, { useState } from 'react';
 
 const StudentResponse = ({ questionId }) => {
@@ -7,7 +7,7 @@ const StudentResponse = ({ questionId }) => {
 
   const handleSubmit = async () => {
     try {
-      await fetch('http://localhost:5000/api/respond', {
+      await fetch('https://new-backend-1-kyhx.onrender.com/api/respond', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ questionId, optionIndex: selectedOption })

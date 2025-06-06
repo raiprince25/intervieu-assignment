@@ -20,7 +20,6 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants }) => {
   }, [initialParticipants]);
 
   useEffect(() => {
-    // Auto-scroll to bottom on new message
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
@@ -29,7 +28,6 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants }) => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim()) {
-      // Support image links
       setChatMessages((prev) => [
         ...prev,
         { sender: 'User 2', message: newMessage.trim() },
@@ -39,8 +37,7 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants }) => {
   };
 
   return (
-    <div className="fixed right-36 bottom-36 w-[477px] h-[429px] bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 font-[Sora]">
-      {/* Header */}
+    <div className="fixed right-16 bottom-46 w-[477px] h-[429px] bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 font-[Sora]">
       <div className="flex border-b border-gray-200 relative">
         <button
           className={`flex-1 w-[35px] font-[Sora] py-3  font-semibold text-base ${
@@ -70,76 +67,74 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants }) => {
         </button>
       </div>
 
-      {/* Chat Tab */}
       {activeTab === 'chat' && (
-        <div className="flex flex-col h-full">
-          {/* Scrollable message area */}
+  <div className="flex flex-col h-full">
+    <div
+      ref={messagesContainerRef}
+      // Added 'hide-scrollbar' class here
+      className="flex-1 overflow-y-auto px-4 py-3 space-y-3 hide-scrollbar"
+    >
+      {chatMessages.length > 0 ? (
+        chatMessages.map((msg, index) => (
           <div
-            ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+            key={index}
+            className={`flex flex-col ${
+              msg.sender === 'User 2' ? 'items-end' : 'items-start'
+            }`}
           >
-            {chatMessages.length > 0 ? (
-              chatMessages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    msg.sender === 'User 2' ? 'justify-end' : 'justify-start'
-                  }`}
-                >
-                  <div
-                    className={`max-w-[75%] break-words px-3 py-2 rounded-lg text-sm ${
-                      msg.sender === 'User 2'
-                        ? 'bg-[#8F64E1] text-white'
-                        : 'bg-gray-200 text-gray-800'
-                    }`}
-                  >
-                    <div className="font-semibold text-xs mb-1">{msg.sender}</div>
-                    {
-                      // Detect image links (simple heuristic)
-                      msg.message.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
-                        <img
-                          src={msg.message}
-                          alt="sent media"
-                          className="max-w-full h-auto rounded-md"
-                        />
-                      ) : (
-                        msg.message
-                      )
-                    }
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-gray-500 text-center">No messages yet</div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input box */}
-          <form
-            onSubmit={handleSendMessage}
-            className="border-t border-gray-200 p-3 bg-white"
-          >
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type message or image URL..."
-                className="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#6766D5]"
-              />
-              <button
-                type="submit"
-                className="bg-[#6766D5] text-white px-4 py-2 rounded-r-lg text-sm font-medium hover:bg-[#5a59c7] transition-colors"
-              >
-                Send
-              </button>
+            <div className={`text-[12px] text-[#4F0BD3] font-[Sora] font-semibold mb-1 ${msg.sender === 'User 2' ? 'pr-1' : 'pl-1'} text-[#4F0BD3]`}>
+              {msg.sender}
             </div>
-          </form>
-        </div>
+            <div
+              className={`max-w-[75%] break-words px-3 py-2 rounded-lg text-[14px] font-[Sora] font-normal text-sm
+                ${msg.sender === 'User 2'
+                  ? 'bg-[#8F64E1] text-white'
+                  : 'bg-[#3A3A3B] text-white'
+                }`}
+            >
+              {
+                msg.message.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+                  <img
+                    src={msg.message}
+                    alt="sent media"
+                    className="max-w-full h-auto rounded-md"
+                  />
+                ) : (
+                  msg.message
+                )
+              }
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-gray-500 text-center">No messages yet</div>
       )}
+      <div ref={messagesEndRef} />
+    </div>
 
-      {/* Participants Tab */}
+    <form
+      onSubmit={handleSendMessage}
+      className="border-t border-gray-200 p-3 bg-white"
+    >
+      <div className="flex items-center">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type message or image URL..."
+          className="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#6766D5]"
+        />
+        <button
+          type="submit"
+          className="bg-[#6766D5] text-white px-4 py-2 rounded-r-lg text-sm font-medium hover:bg-[#5a59c7] transition-colors"
+        >
+          Send
+        </button>
+      </div>
+    </form>
+  </div>
+)}
+
       {activeTab === 'participants' && (
         <div className="flex-1 overflow-y-auto p-4">
           <h4 className="text-sm text-[#726F6F] mb-2">Name</h4>

@@ -19,7 +19,7 @@ const TeacherDashboard = () => {
     const name = prompt('Enter your teacher name:') || 'Teacher';
     setTeacherName(name);
     
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io('https://new-backend-1-kyhx.onrender.com', { transports: ['websocket'] });
     setSocket(newSocket);
 
     newSocket.emit('teacher-join', name);
@@ -54,7 +54,7 @@ const TeacherDashboard = () => {
 
   const fetchActiveStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/active-students');
+      const response = await axios.get('https://new-backend-1-kyhx.onrender.com/api/active-students');
       setActiveStudents(response.data);
     } catch (err) {
       console.error('Error fetching active students:', err);
@@ -164,109 +164,8 @@ const TeacherDashboard = () => {
         </div>
       ) : (
         <>
-          {/* <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">Create New Poll</h2>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Question</label>
-              <input
-                type="text"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your question"
-              />
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Options</label>
-              {options.map((option, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={option}
-                    onChange={(e) => handleOptionChange(index, e.target.value)}
-                    className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder={`Option ${index + 1}`}
-                  />
-                </div>
-              ))}
-              <button
-                onClick={handleAddOption}
-                className="mt-2 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-              >
-                Add Option
-              </button>
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Duration (seconds)</label>
-              <input
-                type="number"
-                value={duration}
-                onChange={(e) => setDuration(parseInt(e.target.value) || 60)}
-                min="10"
-                max="300"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            
-            <button
-              onClick={handleCreatePoll}
-              disabled={activePoll?.isActive}
-              className={`px-4 py-2 rounded text-white ${activePoll?.isActive ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
-            >
-              {activePoll?.isActive ? 'Poll Active' : 'Create Poll'}
-            </button>
-          </div> */}
+      
           <TeacherMainBoard/>
-          
-          {/* {activePoll && (
-            <div className="bg-white p-6 rounded-lg shadow mb-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Live Results: {activePoll.question}
-                <span className="ml-2 text-sm font-normal text-gray-500">
-                  {activePoll.isActive ? '(Active)' : '(Ended)'}
-                </span>
-              </h2>
-              
-              <div className="space-y-3">
-                {activePoll.options.map((option, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-1">
-                      <span>{option.text}</span>
-                      <span>{option.votes} votes</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div
-                        className="bg-blue-600 h-2.5 rounded-full"
-                        style={{ 
-                          width: `${(option.votes / Math.max(1, activePoll.answers.length)) * 100}%` 
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-4">
-                <h3 className="font-medium mb-2 text-gray-700">
-                  Students responded: {activePoll.answers.length}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {activePoll.answers.map((answer) => (
-                    <div key={answer.userId} className="flex justify-between items-center p-2 bg-gray-100 rounded">
-                      <span>{answer.userName}</span>
-                      <span className="text-sm text-gray-600">
-                        Voted: {activePoll.options[answer.optionIndex].text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )} */}
-          
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">
               Active Students ({activeStudents.length})

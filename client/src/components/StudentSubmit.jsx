@@ -15,8 +15,9 @@ const StudentSubmit = () => {
 
   useEffect(() => {
     const fetchActiveQuestion = async () => {
-    const response = await fetch('http://localhost:5000/api/results');
+    const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/results');
     const data = await response.json();
+    console.log(data,"kjnk")
 
     if (!data.question) {
       navigate('/');
@@ -25,12 +26,14 @@ const StudentSubmit = () => {
     setQuestionData({
       question: data.question,
       options: data.options,
-      timeLeft: data.timer || 60,
     });
+
+    setTimeLeft(data.timer|| 60);
+
+    console.log(questionData,"tle")
 
     setUniqueId(data.unique_id);
 
-    // Map option text to ID for selection tracking
     const map = {};
     data.options.forEach((opt) => {
       map[opt.text] = opt._id;
@@ -43,7 +46,7 @@ const StudentSubmit = () => {
 
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/results');
+        const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/results');
         const data = await response.json();
         if (data.options) setResults(data.options);
       } catch (err) {
@@ -55,19 +58,19 @@ const StudentSubmit = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(countdown);
-          handleSubmit(); // Auto submit
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  const countdown = setInterval(() => {
+    setTimeLeft(prev => {
+      if (prev <= 1) {
+        clearInterval(countdown);
+        navigate('/student/results'); 
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+  return () => clearInterval(countdown);
+}, [navigate]);
 
-    return () => clearInterval(countdown);
-  }, []);
 
   const handleSubmit = async () => {
   if (selectedOption === null) return;
@@ -83,7 +86,7 @@ const StudentSubmit = () => {
   }
 
   try {
-    const response = await fetch('http://localhost:5000/api/submit', {
+    const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -141,8 +144,8 @@ const StudentSubmit = () => {
                     <div
                       className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-colors duration-150
                         ${selectedOption === option.text 
-                          ? 'bg-[#7B61FF] text-white' // Selected: purple bg, white text
-                          : 'bg-gray-400 text-white'  // Not selected: gray bg, white text
+                          ? 'bg-[#7B61FF] text-white'
+                          : 'bg-gray-400 text-white'
                         }`}
                     >
                       {index + 1}

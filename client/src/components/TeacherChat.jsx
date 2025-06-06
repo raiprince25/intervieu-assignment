@@ -19,7 +19,7 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants, questionId 
   useEffect(() => {
     const fetchParticipants = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/results');
+        const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/results');
         const data = await response.json();
         
         if (data.participants) {
@@ -58,7 +58,7 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants, questionId 
       setKickedParticipants(prev => [...prev, participantName]);
 
       // API call to persist the kick
-      const response = await fetch('http://localhost:5000/api/kickParticipant', {
+      const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/kickParticipant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,8 +81,7 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants, questionId 
   };
 
   return (
-    <div className="fixed right-36 bottom-36 w-[477px] h-[429px] bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 font-[Sora]">
-      {/* Header */}
+    <div className="fixed right-16 bottom-46 w-[477px] h-[429px] bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 font-[Sora]">
       <div className="flex border-b border-gray-200 relative">
         <button
           className={`flex-1 w-[35px] font-[Sora] py-3 font-semibold text-base ${
@@ -112,65 +111,52 @@ const ChatWindow = ({ toggleChat, participants: initialParticipants, questionId 
         </button>
       </div>
 
-      {/* Chat Tab */}
       {activeTab === 'chat' && (
         <div className="flex flex-col h-full">
           <div
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
           >
-            {chatMessages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.sender === 'User 2' ? 'justify-end' : 'justify-start'
-                }`}
-              >
+            {chatMessages.length > 0 ? (
+              chatMessages.map((msg, index) => (
                 <div
-                  className={`max-w-[75%] break-words px-3 py-2 rounded-lg text-sm font-[Sora]  ${
-                    msg.sender === 'User 2'
-                      ? 'bg-blue-600 text-[#FFFFFF]'
-                      : 'bg-[#3A3A3B] text-[#FFFFFF]' 
+                  key={index}
+                  className={`flex flex-col ${
+                    msg.sender === 'User 2' ? 'items-end' : 'items-start'
                   }`}
                 >
-                  <div className="font-semibold text-xs mb-1">{msg.sender}</div>
-                  {msg.message.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
-                    <img
-                      src={msg.message}
-                      alt="sent media"
-                      className="max-w-full h-auto rounded-md"
-                    />
-                  ) : (
-                    msg.message
-                  )}
+                  <div className={`text-[12px] text-[#4F0BD3] font-[Sora] font-semibold mb-1 ${msg.sender === 'User 2' ? 'pr-1' : 'pl-1'} text-[#4F0BD3]`}>
+                    {msg.sender}
+                  </div>
+                  <div
+                    className={`max-w-[75%] break-words px-3 py-2 rounded-lg text-[14px] font-[Sora] font-normaltext-sm 
+                                ${msg.sender === 'User 2'
+                                  ? 'bg-[#8F64E1] text-white'
+                                  : 'bg-[#3A3A3B] text-white'
+                                }`}
+                  >
+                    {
+                      msg.message.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+                        <img
+                          src={msg.message}
+                          alt="sent media"
+                          className="max-w-full h-auto rounded-md"
+                        />
+                      ) : (
+                        msg.message
+                      )
+                    }
+                     </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-gray-500 text-center">No messages yet</div>
+            )}
             <div ref={messagesEndRef} />
           </div>
-          
-          {/* Message Input */}
-          <form onSubmit={handleSendMessage} className="border-t p-3">
-            <div className="flex">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 border rounded-l px-3 py-2 text-sm focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-[#6766D5] text-white px-4 py-2 rounded-r text-sm font-medium hover:bg-[#5a59c7]"
-              >
-                Send
-              </button>
-            </div>
-          </form>
         </div>
       )}
 
-      {/* Participants Tab */}
       {activeTab === 'participants' && (
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-4 items-center">

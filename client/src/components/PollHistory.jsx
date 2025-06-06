@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Eye from '../assets/Eye.svg'; // Assuming Eye.svg is used for the back button, as per your snippet
+import Eye from '../assets/Eye.svg';
 
 const PollHistory = () => {
   const [pollHistory, setPollHistory] = useState([]);
@@ -9,8 +9,7 @@ const PollHistory = () => {
   useEffect(() => {
     const fetchPollHistory = async () => {
       try {
-        // Use a more robust API endpoint for poll history that returns questions with their options and percentages
-        const response = await fetch('http://localhost:5000/api/polls/history'); 
+        const response = await fetch('https://new-backend-1-kyhx.onrender.com/api/polls/history'); 
         const data = await response.json();
         setPollHistory(data);
       } catch (error) {
