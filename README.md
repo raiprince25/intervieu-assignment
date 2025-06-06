@@ -24,7 +24,6 @@
 - **Frontend**: React + Vite + Tailwind CSS
 - **Backend**: Node.js + Express + Socket.io
 - **Database**: MongoDB Atlas
-- **State Management**: React Context + LocalStorage
 
 ## System Flow
 
